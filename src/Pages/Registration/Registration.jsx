@@ -4,7 +4,7 @@ import RegistrationRight from '../../Component/RegistrationComponent/Registratio
 const Registration = () => {
     return (
         <>
-            <div className='flex justify-between items-center'>
+            <div className='flex justify-between items-center h-screen'>
                 <RegistrationLeft />
                 <RegistrationRight />
             </div>
