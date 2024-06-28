@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { FaRegEye } from "react-icons/fa6";
+// import { CSSProperties } from "react";
 import { FaRegEyeSlash } from "react-icons/fa";
+import { EmailValidators, fullNameValidators, passwordvalidators } from "../../../Utils/Validation.js";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { toast, Bounce } from 'react-toastify';
+import BeatLoader from "react-spinners/BeatLoader.js";
 
+const auth = getAuth();
 
 const RegistrationLeft = () => {
 
@@ -9,6 +15,9 @@ const RegistrationLeft = () => {
     const [fullName, setFullName] = useState("");
     const [password, setPassword] = useState("");
     const [eyeOpen, seteyeOpent] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [color, setColor] = useState("#ffffff");
+
     /**
      * Error useState
      */
@@ -53,19 +62,50 @@ const RegistrationLeft = () => {
     }
 
     const handleSubmit = () => {
-        if (!email) {
-            setEmailError("Email Missing");
-        } else if (!fullName) {
+        if (!email || !EmailValidators(email)) {
+            setEmailError("Email Missing or wrong email");
+        } else if (!fullName || fullNameValidators(fullName)) {
             setEmailError("");
-            setFullNameError("FullName Missing");
-        } else if (!password) {
+            setFullNameError("FullName Missing or in 20 characters");
+        } else if (!password || !passwordvalidators(password)) {
             setFullNameError("");
             setPasswordError("Password Missing");
         } else {
             setPasswordError("");
-            alert("Ok");
+            setLoading(true);
+            createUserWithEmailAndPassword(auth, email, password).then((userInfo) => {
+                toast(`${fullName} Registration Done`, {
+                    position: "top-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            }).then(() => {
+            }).catch((err) => {
+                let ourError = err.message.split("/")[1]
+                toast.error(ourError.slice(0, ourError.length - 2), {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            }).finally(() => {
+                setLoading(false);
+            })
         }
     }
+
+
     return (
         <>
             <div className=' w-3/5 h-screen'>
@@ -129,7 +169,14 @@ const RegistrationLeft = () => {
                                 </span>
                             </div>
                             <div className='cursor-pointer' onClick={handleSubmit}>
-                                <button className='font-semibold text-white bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 w-full rounded-full py-5 '>Sign Up</button>
+                                <button className='font-semibold text-white bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 w-full rounded-full py-4'>{loading ? (<BeatLoader
+                                    color={color}
+                                    loading={loading}
+                                    // cssOverride={override}
+                                    size={20}
+                                    aria-label="Loading Spinner"
+                                    data-testid="loader"
+                                />) : "Sign Up"}</button>
                             </div>
                             <div className='text-center font-Nunito'>
                                 <p className='text-secondary_auth_color'>Already  have an account ?<span className='text-orange-600'> Sign In</span></p>
