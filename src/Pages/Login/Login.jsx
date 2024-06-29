@@ -1,8 +1,14 @@
-import React from 'react'
+import React from 'react';
+import LoginLeft from '../../Component/LoginComponent/LoginLeft';
+import LoginRight from '../../Component/LoginComponent/LoginRight';
 
 const Login = () => {
     return (
-        <div>This is login page</div>
+        <div>
+            <LoginLeft />
+            <LoginRight />
+
+        </div>
     )
 }
 
