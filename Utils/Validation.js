@@ -10,9 +10,9 @@ export function EmailValidators(email) {
 
 export function fullNameValidators(fullName) {
     if (fullName.length >= 2 && fullName.length < 20) {
-        return false;
-    } else {
         return true;
+    } else {
+        return false;
     }
 }
 

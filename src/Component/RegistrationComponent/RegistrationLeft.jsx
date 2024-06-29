@@ -64,7 +64,7 @@ const RegistrationLeft = () => {
     const handleSubmit = () => {
         if (!email || !EmailValidators(email)) {
             setEmailError("Email Missing or wrong email");
-        } else if (!fullName || fullNameValidators(fullName)) {
+        } else if (!fullName || !fullNameValidators(fullName)) {
             setEmailError("");
             setFullNameError("FullName Missing or in 20 characters");
         } else if (!password || !passwordvalidators(password)) {
@@ -100,6 +100,12 @@ const RegistrationLeft = () => {
                     transition: Bounce,
                 });
             }).finally(() => {
+                setEmail("");
+                setFullName("");
+                setPassword("");
+                setEmailError("");
+                setFullNameError("");
+                setPasswordError("");
                 setLoading(false);
             })
         }
@@ -124,6 +130,7 @@ const RegistrationLeft = () => {
                                     <input type="email"
                                         name="email"
                                         id="email"
+                                        value={email}
                                         onChange={handleEmail}
                                         placeholder='Ladushing691@gmail.com' className='py-3 rounded-lg pl-2 placeholder:text-secondary_auth_color' />
                                 </fieldset>
@@ -141,6 +148,7 @@ const RegistrationLeft = () => {
                                     <input type="text"
                                         name="text"
                                         id="text"
+                                        value={fullName}
                                         onChange={handleFullName}
                                         placeholder='Nahid Sarwar' className='py-3 rounded-lg pl-2 placeholder:text-secondary_auth_color' />
                                 </fieldset>
@@ -157,6 +165,7 @@ const RegistrationLeft = () => {
                                         <input type={eyeOpen ? "password" : "text"}
                                             name="password"
                                             id="password"
+                                            value={password}
                                             onChange={handlePassword}
                                             placeholder='..............' className='py-3 rounded-lg pl-2 placeholder:text-secondary_auth_color' />
                                         <span className='cursor-pointer' onClick={handleeye}>

@@ -1,5 +1,5 @@
 import React from 'react'
-import SignUpImg from '../../assets/SignUp.png'
+import SignUpImg from '../../assets/registration.gif'
 
 const RegistrationRight = () => {
     return (
