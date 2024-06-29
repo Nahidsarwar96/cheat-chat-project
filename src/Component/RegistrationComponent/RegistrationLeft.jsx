@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaRegEye } from "react-icons/fa6";
 // import { CSSProperties } from "react";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { EmailValidators, fullNameValidators, passwordvalidators } from "../../../Utils/Validation.js";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { toast, Bounce } from 'react-toastify';
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+    onAuthStateChanged,
+    updateProfile
+} from "firebase/auth";
 import BeatLoader from "react-spinners/BeatLoader.js";
+import { SuccessToast, ErrorToast, InfoToast } from '../../../Utils/Toast.js';
 
 const auth = getAuth();
 
@@ -74,40 +80,31 @@ const RegistrationLeft = () => {
             setPasswordError("");
             setLoading(true);
             createUserWithEmailAndPassword(auth, email, password).then((userInfo) => {
-                toast(`${fullName} Registration Done`, {
-                    position: "top-left",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    transition: Bounce,
-                });
+                SuccessToast(`${fullName} Registration Done`)
             }).then(() => {
-            }).catch((err) => {
-                let ourError = err.message.split("/")[1]
-                toast.error(ourError.slice(0, ourError.length - 2), {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    transition: Bounce,
-                });
-            }).finally(() => {
-                setEmail("");
-                setFullName("");
-                setPassword("");
-                setEmailError("");
-                setFullNameError("");
-                setPasswordError("");
-                setLoading(false);
+                sendEmailVerification(auth.currentUser)
+                    .then(() => {
+                        InfoToast(`${fullName} Please check your email`, "top-center")
+                    });
+            }).then(() => {
+                updateProfile(auth.currentUser, {
+                    displayName: fullName,
+                })
             })
+
+                .catch((err) => {
+                    let ourError = err.message.split("/")[1]
+                    ErrorToast(ourError.slice(0, ourError.length - 2), "top-left")
+
+                }).finally(() => {
+                    setEmail("");
+                    setFullName("");
+                    setPassword("");
+                    setEmailError("");
+                    setFullNameError("");
+                    setPasswordError("");
+                    setLoading(false);
+                })
         }
     }
 
