@@ -4,7 +4,7 @@ import LoginRight from '../../Component/LoginComponent/LoginRight';
 
 const Login = () => {
     return (
-        <div>
+        <div className='flex items-center'>
             <LoginLeft />
             <LoginRight />
 

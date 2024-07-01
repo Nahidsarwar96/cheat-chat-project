@@ -175,7 +175,7 @@ const RegistrationLeft = () => {
                                 </span>
                             </div>
                             <div className='cursor-pointer' onClick={handleSubmit}>
-                                <button className='font-semibold text-white bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 w-full rounded-full py-4'>{loading ? (<BeatLoader
+                                <button className='font-semibold text-white bg-violet-600 w-full rounded-full py-4'>{loading ? (<BeatLoader
                                     color={color}
                                     loading={loading}
                                     // cssOverride={override}
