@@ -3,7 +3,10 @@ import { FaRegEye } from "react-icons/fa6";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import { EmailValidators, passwordvalidators } from '../../../Utils/Validation.js';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
+const auth = getAuth();
 
 
 const LoginLeft = () => {
@@ -11,7 +14,15 @@ const LoginLeft = () => {
     const [eyeOpen, seteyeOpent] = useState(true);
     const [loginInfo, setLoginInfo] = useState({
         email: "",
-        password: ""
+        password: "",
+    })
+
+    /**
+     * to do :using error state
+     */
+    const [loginError, setLoginError] = useState({
+        emailError: "",
+        passwordError: "",
     })
 
     /**
@@ -26,6 +37,40 @@ const LoginLeft = () => {
             }
         )
     }
+    /**
+     * to do: handle signin function implement
+     * param({
+     * 
+     * })
+     */
+
+    const handleLogin = (() => {
+        const { email, password } = loginInfo;
+        if (!email || !EmailValidators(email)) {
+            setLoginError({
+                ...loginError,
+                emailError: "Your credential is wrong!"
+            })
+        } else if (!password || !passwordvalidators(password)) {
+            setLoginError({
+                ...loginError,
+                emailError: "",
+                passwordError: "Your password wrong!"
+            })
+        } else {
+            setLoginError({
+                ...loginError,
+                emailError: "",
+                passwordError: ""
+            })
+            signInWithEmailAndPassword(auth, email, password).then((loginInfo) => {
+                console.log(loginInfo);
+
+            }).catch((err) => {
+                console.log(err.code);
+            })
+        }
+    })
 
     return (
 
@@ -58,7 +103,7 @@ const LoginLeft = () => {
                                         placeholder='Ladushing691@gmail.com' className='py-3 rounded-lg pl-2 placeholder:text-secondary_auth_color' />
                                 </fieldset>
                                 <span className='text-red-500 text-sm font-normal font-Nunito'>
-                                    {/* {emailError} */}
+                                    {loginError.emailError}
                                 </span>
                             </div>
 
@@ -79,9 +124,12 @@ const LoginLeft = () => {
                                         </span>
                                     </div>
                                 </fieldset>
+                                <span className='text-red-500 text-sm font-normal font-Nunito'>
+                                    {loginError.passwordError}
+                                </span>
 
                             </div>
-                            <div className='cursor-pointer'>
+                            <div className='cursor-pointer' onClick={handleLogin}>
                                 <button className='font-semibold text-white bg-violet-600 w-full rounded-xl py-4'> Login to continue</button>
                             </div>
                             <div className='text-center font-Nunito'>

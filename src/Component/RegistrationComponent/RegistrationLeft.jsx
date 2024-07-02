@@ -106,6 +106,7 @@ const RegistrationLeft = () => {
                     createAt: getTimeNow(),
                 }).then(() => {
                     console.log("write data on users collection");
+                    navigate("/login");
                 }).catch((err) => {
                     console.error("User data write failed");
                 })
