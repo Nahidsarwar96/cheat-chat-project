@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaRegEye } from "react-icons/fa6";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router-dom";
 
 
 
@@ -38,7 +39,7 @@ const LoginLeft = () => {
                             <h1 className='text-[34px] font-bold text-promary_auth_color font-Nunito'>Login to your account! </h1>
 
                         </div>
-                        <div className='border-[2px] border-gray-200 py-5 px-1 rounded-xl'>
+                        <div className='border-[2px] border-gray-200 py-5 px-2 rounded-xl'>
                             <button className='flex items-center gap-x-2 text-[18px] font-bold text-promary_auth_color font-Nunito'>
                                 <FcGoogle className='text-3xl' />
                                 Login With Google
@@ -84,7 +85,13 @@ const LoginLeft = () => {
                                 <button className='font-semibold text-white bg-violet-600 w-full rounded-xl py-4'> Login to continue</button>
                             </div>
                             <div className='text-center font-Nunito'>
-                                <p className='text-secondary_auth_color'>Don't have an account? ?<span className='text-orange-600'> Sign Up</span></p>
+
+                                <Link to="/registration">
+                                    <p className='text-secondary_auth_color'>Don't have an account?
+                                        <span className='text-orange-600 pl-1'>   Sign Up</span>
+                                    </p>
+                                </Link>
+
                             </div>
 
                         </div>

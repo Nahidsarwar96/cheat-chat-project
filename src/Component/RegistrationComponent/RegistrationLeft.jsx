@@ -12,11 +12,18 @@ import {
 } from "firebase/auth";
 import BeatLoader from "react-spinners/BeatLoader.js";
 import { SuccessToast, ErrorToast, InfoToast } from '../../../Utils/Toast.js';
+import { getDatabase, ref, set, push } from "firebase/database";
+import { getTimeNow } from '../../../Utils/Moment/Moment.js';
+import { useNavigate, Link } from "react-router-dom";
 
-const auth = getAuth();
+
+
+
 
 const RegistrationLeft = () => {
-
+    const auth = getAuth();
+    const navigate = useNavigate();
+    const db = getDatabase();
     const [email, setEmail] = useState("");
     const [fullName, setFullName] = useState("");
     const [password, setPassword] = useState("");
@@ -90,11 +97,24 @@ const RegistrationLeft = () => {
                 updateProfile(auth.currentUser, {
                     displayName: fullName,
                 })
+            }).then(() => {
+                const usersRef = ref(db, "/users")
+                set(push(usersRef), {
+                    uid: auth.currentUser.uid,
+                    userName: fullName,
+                    userEmail: auth.currentUser.email,
+                    createAt: getTimeNow(),
+                }).then(() => {
+                    console.log("write data on users collection");
+                }).catch((err) => {
+                    console.error("User data write failed");
+                })
             })
 
                 .catch((err) => {
-                    let ourError = err.message.split("/")[1]
-                    ErrorToast(ourError.slice(0, ourError.length - 2), "top-left")
+                    // let ourError = err.message.split("/")[1]
+                    // ErrorToast(ourError.slice(0, ourError.length - 2), "top-left")
+                    ErrorToast(err.code, "top-left")
 
                 }).finally(() => {
                     setEmail("");
@@ -185,7 +205,11 @@ const RegistrationLeft = () => {
                                 />) : "Sign Up"}</button>
                             </div>
                             <div className='text-center font-Nunito'>
-                                <p className='text-secondary_auth_color'>Already  have an account ?<span className='text-orange-600'> Sign In</span></p>
+
+                                <Link to="/login"> <p className='text-secondary_auth_color'>Already  have an account ? <span className='text-orange-600 pl-1'> Sign In</span>
+
+                                </p> </Link>
+
                             </div>
 
                         </div>
