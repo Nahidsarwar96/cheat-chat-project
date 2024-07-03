@@ -8,7 +8,7 @@ import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvide
 import { SuccessToast, ErrorToast, InfoToast } from '../../../Utils/Toast.js';
 import { Bars } from 'react-loader-spinner'
 import { getDatabase, ref, set, push } from "firebase/database";
-
+import { getTimeNow } from '../../../Utils/Moment/Moment.js';
 
 
 
@@ -104,15 +104,19 @@ const LoginLeft = () => {
                 const token = credential.accessToken;
                 const user = result.user;
                 const userRef = ref(rdb, "users");
-                set(push(usersRef), {
+                set(push(userRef), {
                     uid: user.uid,
                     userName: user.displayName,
                     userEmail: user.email,
-                    createAt: getTime(),
+                    createAt: getTimeNow(),
                 })
-            }).catch((error) => {
-                const errorCode = error.code;
+            }).then(() => {
+                console.log("Ok");
+            })
 
+            .catch((error) => {
+                const errorCode = error.code;
+                console.log(errorCode);
             });
     }
 
