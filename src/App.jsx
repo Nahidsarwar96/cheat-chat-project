@@ -9,7 +9,7 @@ import {
   RouterProvider,
   Route
 } from "react-router-dom";
-
+import Home from './Pages/Home/Home.jsx'
 const App = () => {
 
   const router = createBrowserRouter(
@@ -17,6 +17,7 @@ const App = () => {
       <>
         <Route path="/registration" element={<Registration />}></Route>,
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/" element={<Home />}></Route>
       </>
     ))
   return (
