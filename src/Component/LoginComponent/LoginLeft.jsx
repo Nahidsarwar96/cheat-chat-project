@@ -4,14 +4,21 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { EmailValidators, passwordvalidators } from '../../../Utils/Validation.js';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { SuccessToast, ErrorToast, InfoToast } from '../../../Utils/Toast.js';
+import { Bars } from 'react-loader-spinner'
+import { getDatabase, ref, set, push } from "firebase/database";
 
+
+
+
+const rdb = getDatabase();
 const auth = getAuth();
-
 
 const LoginLeft = () => {
 
     const [eyeOpen, seteyeOpent] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [loginInfo, setLoginInfo] = useState({
         email: "",
         password: "",
@@ -63,14 +70,51 @@ const LoginLeft = () => {
                 emailError: "",
                 passwordError: ""
             })
+            setLoading(true);
             signInWithEmailAndPassword(auth, email, password).then((loginInfo) => {
                 console.log(loginInfo);
+                SuccessToast("Login Success", "bottom-left")
 
             }).catch((err) => {
-                console.log(err.code);
+                ErrorToast(`${err.code}`)
+
+            }).finally(() => {
+                setLoading(false);
+                setLoginError({
+                    ...loginError,
+                    emailError: "",
+                    passwordError: ""
+                })
             })
         }
     })
+
+    /**
+     * to do: handle login Google
+     */
+
+    const handleLoginGoogle = () => {
+
+
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                const user = result.user;
+                const userRef = ref(rdb, "users");
+                set(push(usersRef), {
+                    uid: user.uid,
+                    userName: user.displayName,
+                    userEmail: user.email,
+                    createAt: getTime(),
+                })
+            }).catch((error) => {
+                const errorCode = error.code;
+
+            });
+    }
 
     return (
 
@@ -84,7 +128,7 @@ const LoginLeft = () => {
                             <h1 className='text-[34px] font-bold text-promary_auth_color font-Nunito'>Login to your account! </h1>
 
                         </div>
-                        <div className='border-[2px] border-gray-200 py-5 px-2 rounded-xl'>
+                        <div onClick={handleLoginGoogle} className='border-[2px] border-gray-200 py-5 px-2 rounded-xl'>
                             <button className='flex items-center gap-x-2 text-[18px] font-bold text-promary_auth_color font-Nunito'>
                                 <FcGoogle className='text-3xl' />
                                 Login With Google
@@ -129,9 +173,25 @@ const LoginLeft = () => {
                                 </span>
 
                             </div>
-                            <div className='cursor-pointer' onClick={handleLogin}>
-                                <button className='font-semibold text-white bg-violet-600 w-full rounded-xl py-4'> Login to continue</button>
+                            <div className='cursor-pointer'>
+                                {loading ? (<button className='font-semibold text-white bg-violet-600 w-full rounded-xl'>
+                                    <span className='flex justify-center items-center py-1'><Bars
+                                        height="40"
+                                        width="60"
+                                        color="#4fa94d"
+                                        ariaLabel="bars-loading"
+
+                                    /></span>
+                                </button>) : (
+                                    <div className='cursor-pointer' onClick={handleLogin}>
+                                        <button className='font-semibold text-white bg-violet-600 w-full rounded-xl py-4'> Login to continue
+                                        </button> </div>)
+
+                                }
+
+
                             </div>
+
                             <div className='text-center font-Nunito'>
 
                                 <Link to="/registration">
