@@ -10,7 +10,7 @@ import LogOutIcon from '../../../assets/HomeAssets/HomeAssetsLeft/logout.gif';
 
 
 const HomeLeft = () => {
-    const [test, setTest] = useState("Bell");
+    const [test, setTest] = useState("Chat");
     return (
         <>
 

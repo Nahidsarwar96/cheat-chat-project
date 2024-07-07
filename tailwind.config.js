@@ -1,4 +1,7 @@
+
 /** @type {import('tailwindcss').Config} */
+
+
 export default {
   content: [
     "./index.html",
@@ -15,6 +18,7 @@ export default {
       },
       fontFamily: {
         'Nunito': ["Nunito Sans", "sans-serif"],
+        'Poppins': ["Poppins", "sans-serif"]
       }
     },
 
