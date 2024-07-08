@@ -21,22 +21,22 @@ const HomeLeft = () => {
                     </picture>
                 </div>
                 <div className='flex flex-col justify-center items-center gap-y-8'>
-                    <div className={`${test == "home" && "w-full bg-white px-14 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
+                    <div className={`${test == "home" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
                         <picture>
                             <img src={Home} alt={Home} className='mix-blend-multiply w-10 cursor-pointer' />
                         </picture>
                     </div>
-                    <div className={`${test == "Chat" && "w-full bg-white px-14 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
+                    <div className={`${test == "Chat" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
                         <picture>
                             <img src={Chat} alt={Chat} className='mix-blend-multiply w-10 cursor-pointer' />
                         </picture>
                     </div>
-                    <div className={`${test == "Bell" && "w-full bg-white px-14 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
+                    <div className={`${test == "Bell" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
                         <picture>
                             <img src={Bell} alt={Bell} className='mix-blend-multiply w-10 cursor-pointer' />
                         </picture>
                     </div>
-                    <div className={`${test == "Settings" && "w-full bg-white px-14 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
+                    <div className={`${test == "Settings" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
                         <picture>
                             <img src={Settings} alt={Settings} className='mix-blend-multiply w-10 cursor-pointer' />
                         </picture>
