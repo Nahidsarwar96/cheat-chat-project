@@ -56,7 +56,7 @@
     position: absolute;
     content: "";
     top: 0;
-    right: -14px;
+    right: -3px;
     background: #3885F4;
     width: 13px;
     height: 100%;
@@ -68,9 +68,9 @@
     position: absolute;
     content: "";
     top: 0;
-    left: 13px;
+    left: 33px;
     background: white;
-    width: 100%;
+    width: 80%;
     height: 100%;
   }
 }

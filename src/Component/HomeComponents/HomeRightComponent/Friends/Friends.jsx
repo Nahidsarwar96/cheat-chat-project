@@ -1,16 +1,14 @@
-import React from 'react';
+import React from 'react'
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Group1 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group1.gif';
-import Group2 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group2.gif';
-import Group3 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group3.gif';
 
-const GroupList = () => {
+const Friends = () => {
     return (
         <div className='p-2 w-[340px] h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl'>
 
             <div className='flex items-center justify-between'>
                 <div className='font-Poppins text-lg font-semibold'>
-                    Group List
+                    Friends
                 </div>
                 <span>
                     <BsThreeDotsVertical className='text-blue-600' />
@@ -25,12 +23,12 @@ const GroupList = () => {
                                 <img src={Group1} alt={Group1} className='w-full h-full object-contain rounded-full' />
                             </picture>
                         </div>
-                        <div class="flex flex-col items-start justify-center text-wrap w-[50%]  text-justify">
+                        <div class="flex flex-col items-start justify-center text-wrap w-[50%]  text-justify pl-2">
                             <h3 className='text-lg font-semibold font-poppins'>Friends Reunion</h3>
                             <p className='text-sm font-normal font-Poppins text-secondary_auth_color'> Hi Guys, Wassup!</p>
                         </div>
                         <div>
-                            <button className='bg-blue-600 py-1 px-3 mr-2 font-semibold text-white rounded-xl font-Poppins '>Join</button>
+                            <span className='text-secondary_auth_color font-poppins text-xs'>Today, 8:56pm</span>
                         </div>
                     </div>
 
@@ -44,4 +42,4 @@ const GroupList = () => {
     )
 }
 
-export default GroupList
+export default Friends
