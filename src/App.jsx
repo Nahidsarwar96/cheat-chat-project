@@ -9,7 +9,10 @@ import {
   RouterProvider,
   Route
 } from "react-router-dom";
-import Home from './Pages/Home/Home.jsx'
+import Home from './Pages/Home/Home.jsx';
+import RootLayout from './Component/HomeComponents/RootLayout/RootLayout.jsx';
+
+
 const App = () => {
 
   const router = createBrowserRouter(
@@ -17,7 +20,15 @@ const App = () => {
       <>
         <Route path="/registration" element={<Registration />}></Route>,
         <Route path="/login" element={<Login />}></Route>
-        <Route path="/" element={<Home />}></Route>
+        <Route element={<RootLayout />}>
+          <Route index="/" element={<Home />}></Route>
+          <Route path="/chat" element={"Chat"}></Route>
+          <Route path="/notification" element={"Notification"}></Route>
+          <Route path="/settings" element={"Settings"}></Route>
+
+
+
+        </Route>
       </>
     ))
   return (

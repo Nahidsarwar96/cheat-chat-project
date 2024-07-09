@@ -3,14 +3,19 @@ import Avatar from '../../../assets/HomeAssets/HomeAssetsLeft/Avatar.gif';
 
 import Home from '../../../assets/HomeAssets/HomeAssetsLeft/home.gif';
 import Chat from '../../../assets/HomeAssets/HomeAssetsLeft/chat.gif';
-import Bell from '../../../assets/HomeAssets/HomeAssetsLeft/bell.gif';
+import Notification from '../../../assets/HomeAssets/HomeAssetsLeft/bell.gif';
 import Settings from '../../../assets/HomeAssets/HomeAssetsLeft/setting.gif';
 import LogOutIcon from '../../../assets/HomeAssets/HomeAssetsLeft/logout.gif';
+import { NavLink, useLocation } from 'react-router-dom';
 
 
 
 const HomeLeft = () => {
-    const [test, setTest] = useState("Chat");
+
+    const Location = useLocation();
+    const path = Location.pathname.split("/")[1];
+
+
     return (
         <>
 
@@ -21,28 +26,41 @@ const HomeLeft = () => {
                     </picture>
                 </div>
                 <div className='flex flex-col justify-center items-center gap-y-8'>
-                    <div className={`${test == "home" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
-                        <picture>
-                            <img src={Home} alt={Home} className='mix-blend-multiply w-10 cursor-pointer' />
-                        </picture>
-                    </div>
-                    <div className={`${test == "Chat" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
-                        <picture>
-                            <img src={Chat} alt={Chat} className='mix-blend-multiply w-10 cursor-pointer' />
-                        </picture>
-                    </div>
-                    <div className={`${test == "Bell" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
-                        <picture>
-                            <img src={Bell} alt={Bell} className='mix-blend-multiply w-10 cursor-pointer' />
-                        </picture>
-                    </div>
-                    <div className={`${test == "Settings" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
-                        <picture>
-                            <img src={Settings} alt={Settings} className='mix-blend-multiply w-10 cursor-pointer' />
-                        </picture>
-                    </div>
+
+                    <NavLink to={"/"}>
+
+                        <div className={`${path == "" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
+                            <picture>
+                                <img src={Home} alt={Home} className='mix-blend-multiply w-10 cursor-pointer' />
+                            </picture>
+                        </div>
+                    </NavLink>
+
+                    <NavLink to={"/chat"}>
+                        <div className={`${path == "chat" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
+                            <picture>
+                                <img src={Chat} alt={Chat} className='mix-blend-multiply w-10 cursor-pointer' />
+                            </picture>
+                        </div>
+
+                    </NavLink>
+
+                    <NavLink to={"/notification"}>
+                        <div className={`${path == "notification" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
+                            <picture>
+                                <img src={Notification} alt={Notification} className='mix-blend-multiply w-10 cursor-pointer' />
+                            </picture>
+                        </div>
+                    </NavLink>
+                    <NavLink to={"/settings"}>
+                        <div className={`${path == "settings" && "w-full bg-white px-12 py-2 rounded-l-2xl iconShaded cursor-pointer"}`}>
+                            <picture>
+                                <img src={Settings} alt={Settings} className='mix-blend-multiply w-10 cursor-pointer' />
+                            </picture>
+                        </div>
+                    </NavLink>
                 </div>
-                <div className='pt-4'>
+                <div className='mt-10'>
                     <picture>
                         <img src={LogOutIcon} alt={LogOutIcon} className='mix-blend-multiply w-10 cursor-pointer' />
                     </picture>
