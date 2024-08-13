@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaRegEye } from "react-icons/fa6";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { EmailValidators, passwordvalidators } from '../../../Utils/Validation.js';
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { SuccessToast, ErrorToast, InfoToast } from '../../../Utils/Toast.js';
@@ -12,11 +12,12 @@ import { getTimeNow } from '../../../Utils/Moment/Moment.js';
 
 
 
-const rdb = getDatabase();
-const auth = getAuth();
+
 
 const LoginLeft = () => {
-
+    const db = getDatabase();
+    const auth = getAuth();
+    const navigate = useNavigate();
     const [eyeOpen, seteyeOpent] = useState(true);
     const [loading, setLoading] = useState(false);
     const [loginInfo, setLoginInfo] = useState({
@@ -74,7 +75,7 @@ const LoginLeft = () => {
             signInWithEmailAndPassword(auth, email, password).then((loginInfo) => {
                 console.log(loginInfo);
                 SuccessToast("Login Success", "bottom-left")
-
+                navigate("/");
             }).catch((err) => {
                 ErrorToast(`${err.code}`)
 
@@ -93,36 +94,75 @@ const LoginLeft = () => {
      * to do: handle login Google
      */
 
-    const handleLoginGoogle = () => {
 
-
+    const HandleLoginWithGoogle = () => {
         const provider = new GoogleAuthProvider();
         signInWithPopup(auth, provider)
             .then((result) => {
-
+                // This gives you a Google Access Token. You can use it to access the Google API.
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 const user = result.user;
-                const userRef = ref(rdb, "users");
-                set(push(userRef), {
-                    uid: user.uid,
-                    userName: user.displayName,
-                    userEmail: user.email,
-                    createAt: getTimeNow(),
-                })
-            }).then(() => {
-                console.log("Ok");
+                return user;
             })
+            .then((userCredintial) => {
 
+
+                const { photoUrl, displayName, email, localId } =
+                    userCredintial.reloadUserInfo;
+                const usersRef = ref(db, "users/");
+                set(push(usersRef), {
+                    uid: localId,
+                    userName: displayName,
+                    usersProfile_picture: photoUrl,
+                    userEmail: email,
+                    createdAt: getTimeNow(),
+                });
+            })
+            .then(() => {
+                navigate("/");
+            })
             .catch((error) => {
+                // Handle Errors here.
                 const errorCode = error.code;
-                console.log(errorCode);
+
             });
-    }
+    };
+    // const handleLoginGoogle = () => {
+
+
+    //     const provider = new GoogleAuthProvider();
+    //     signInWithPopup(auth, provider)
+    //         .then((result) => {
+
+    //             const credintial = GoogleAuthProvider.credentialFromResult(result);
+    //             const token = credintial.accessToken;
+    //             const user = result.user;
+    //             return user;
+    //         }).then((userCredintial) => {
+    //             const [photoUrl, displayName, email, localId] = userCredintial.reloadUserInfo;
+
+    //             const userRef = ref(rdb, "users/");
+    //             set(push(userRef), {
+    //                 uid: localId,
+    //                 userName: displayName,
+    //                 usersProfile_picture: photoUrl,
+    //                 userEmail: email,
+    //                 createAt: getTimeNow(),
+    //             })
+    //         })
+
+    //         .then(() => {
+    //             console.log("Ok");
+    //         })
+
+    //         .catch((error) => {
+    //             const errorCode = error.code;
+
+    //         });
+    // }
 
     return (
-
-
 
         <>
             <div className=' w-3/5 h-screen'>
@@ -132,7 +172,7 @@ const LoginLeft = () => {
                             <h1 className='text-[34px] font-bold text-promary_auth_color font-Nunito'>Login to your account! </h1>
 
                         </div>
-                        <div onClick={handleLoginGoogle} className='border-[2px] border-gray-200 py-5 px-2 rounded-xl'>
+                        <div onClick={HandleLoginWithGoogle} className='border-[2px] border-gray-200 py-5 px-2 rounded-xl'>
                             <button className='flex items-center gap-x-2 text-[18px] font-bold text-promary_auth_color font-Nunito'>
                                 <FcGoogle className='text-3xl' />
                                 Login With Google
@@ -147,6 +187,7 @@ const LoginLeft = () => {
                                     <input type="email"
                                         name="email"
                                         id="email"
+                                        value={loginInfo.email}
                                         onChange={handleLoginInput}
                                         placeholder='Ladushing691@gmail.com' className='py-3 rounded-lg pl-2 placeholder:text-secondary_auth_color' />
                                 </fieldset>
@@ -164,7 +205,7 @@ const LoginLeft = () => {
                                         <input type={eyeOpen ? "password" : "text"}
                                             name="password"
                                             id="password"
-                                            // value={password}
+                                            value={loginInfo.password}
                                             onChange={handleLoginInput}
                                             placeholder='..............' className='py-3 rounded-lg pl-2 placeholder:text-secondary_auth_color' />
                                         <span className='cursor-pointer' onClick={() => { seteyeOpent(!eyeOpen) }}>

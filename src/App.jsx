@@ -1,4 +1,5 @@
 import React from 'react'
+import Error from './Component/Error/Error.jsx';
 import Registration from './Pages/Registration/Registration.jsx';
 import Login from './Pages/Login/Login.jsx'
 import { ToastContainer } from 'react-toastify';
@@ -25,9 +26,7 @@ const App = () => {
           <Route path="/chat" element={"Chat"}></Route>
           <Route path="/notification" element={"Notification"}></Route>
           <Route path="/settings" element={"Settings"}></Route>
-
-
-
+          <Route path="*" element={<Error />}></Route>
         </Route>
       </>
     ))
