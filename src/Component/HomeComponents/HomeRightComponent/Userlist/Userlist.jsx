@@ -28,7 +28,7 @@ const Userlist = () => {
         });
     }, []);
 
-    console.log(users);
+    // console.log(users);
     return (
         <div className='p-2 w-[340px] h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl'>
 
@@ -48,7 +48,7 @@ const Userlist = () => {
                             <picture>
                                 <img
                                     src={`${user.usersProfile_picture ? user.usersProfile_picture : Group2}
-                                    `}
+                                        `}
                                     alt="Missing"
                                     className='w-full h-full object-contain rounded-full' />
                             </picture>
