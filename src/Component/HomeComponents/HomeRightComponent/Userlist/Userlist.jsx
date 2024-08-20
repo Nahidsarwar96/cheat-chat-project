@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Group2 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group2.gif';
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import moment from 'moment/moment';
+import { getAuth } from 'firebase/auth';
+import { getTimeNow } from '../../../../../Utils/Moment/Moment';
 
 
 const Userlist = () => {
     const db = getDatabase();
+    const auth = getAuth();
     const [users, setUsers] = useState([]);
+    const [isFriendRequest, setIsFriendRequest] = useState([]);
     /**
      * to do: Fetch all data from databse
      * *DBNAME:"users"
@@ -18,10 +22,14 @@ const Userlist = () => {
         onValue(userDbRef, (snapshot) => {
             let userBlankArr = [];
             snapshot.forEach((item) => {
-                userBlankArr.push({
-                    ...item.val(),
-                    useKey: item.key,
-                });
+                if (auth.currentUser.uid !== item.val().uid) {
+
+                    userBlankArr.push({
+                        ...item.val(),
+                        useKey: item.key,
+                    });
+                }
+
 
             });
             setUsers(userBlankArr);
@@ -29,6 +37,60 @@ const Userlist = () => {
     }, []);
 
     // console.log(users);
+
+
+    /**
+     * todo: handleFriendRequest Function Implement
+     * @param({user})
+     */
+
+    const handleFriendRequest = (user) => {
+        const FriendRequestRef = ref(db, 'FriendRequest/')
+        set(push(FriendRequestRef), {
+            whoSendFriendRequestName: auth.currentUser.displayName,
+            whoSendFriendRequestEmail: auth.currentUser.email,
+            whoSendFriendRequestUid: auth.currentUser.uid,
+            whoSendFriendRequestProfilePicture: auth.currentUser.photoURL ? auth.currentUser.photoURL : null,
+            whoReceivedFriendRequestUid: user.uid,
+            whoReceivedFriendRequestName: user.userName,
+            whoReceivedFriendRequestEmail: user.userEmail,
+            whoReceivedFriendRequestUserKey: user.useKey,
+            whoReceivedFriendRequestProfilePicture: user.usersProfile_picture,
+            createAt: getTimeNow(),
+
+
+        });
+
+    }
+
+    /**
+     * Todo: fetch data from FriendRequest database
+     * @param({})
+     * hooks useEffect()
+     */
+
+    useEffect(() => {
+        const friendRequestDbRef = ref(db, "FriendRequest/");
+
+        onValue(friendRequestDbRef, (snapshot) => {
+            let blankFriendRequestList = []
+            snapshot.forEach((item) => {
+                blankFriendRequestList.push(
+                    item.val().whoReceivedFriendRequestUid +
+                    item.val().whoSendFriendRequestUid
+                );
+
+
+            });
+
+            setIsFriendRequest(blankFriendRequestList);
+        });
+
+    }, [])
+
+    // console.log(isFriendRequest);
+
+
     return (
         <div className='p-2 w-[340px] h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl'>
 
@@ -61,7 +123,14 @@ const Userlist = () => {
                             </p>
                         </div>
                         <div>
-                            <button className='bg-blue-600 py-1 px-3 mr-2 font-semibold text-white rounded-xl font-Poppins '>+</button>
+
+                            {isFriendRequest.includes(user.uid + auth.currentUser.uid || user.uid + auth.currentUser.uid) ? (<button onClick={() => handleFriendRequest(user)} className='bg-blue-600 py-1 px-3 mr-2 font-semibold text-white rounded-xl font-Poppins '>
+                                -
+                            </button>) : (<button onClick={() => handleFriendRequest(user)} className='bg-blue-600 py-1 px-3 mr-2 font-semibold text-white rounded-xl font-Poppins '>
+                                +
+                            </button>)}
+
+
                         </div>
                     </div>
 

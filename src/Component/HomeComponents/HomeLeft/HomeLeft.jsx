@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '../../../assets/HomeAssets/HomeAssetsLeft/Avatar.gif';
 
 import Home from '../../../assets/HomeAssets/HomeAssetsLeft/home.gif';
@@ -10,13 +10,18 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { Uploader } from "uploader";
 import { UploadButton } from "react-uploader";
-
+import { getDatabase, ref, set, onValue, update } from "firebase/database";
+import { SuccessToast } from '../../../../Utils/Toast';
+import { getAuth } from 'firebase/auth';
 
 
 
 const HomeLeft = () => {
-
+    const auth = getAuth();
     const Location = useLocation();
+    const [profilePictureUpdate, setProfilePictureUpdate] = useState("");
+    const [userList, setUserList] = useState({});
+    const db = getDatabase();
     const path = Location.pathname.split("/")[1];
 
     const uploader = Uploader({
@@ -38,23 +43,62 @@ const HomeLeft = () => {
         },
     };
 
+    /**
+     * to do get all users function
+     */
+
+    useEffect(() => {
+        const userId = auth.currentUser.uid;
+        const starCountRef = ref(db, 'users/');
+        onValue(starCountRef, (snapshot) => {
+            snapshot.forEach((item) => {
+                if (userId === item.val().uid) {
+                    setUserList({
+                        ...item.val(),
+                        userKey: item.key,
+                    });
+                }
+
+            });
 
 
+        });
+
+    }, [])
+
+    // console.log(userList);
+
+    // const dbref for profile update 
+    const profileUpdateRef = ref(db, `users/${userList.userKey}`);
 
     return (
         <>
 
-            <div className='h-full max-w-[175px] rounded-2xl flex flex-col items-center justify-start bg-gradient-to-r from-cyan-500 to-blue-500'>
-                <div className='shadowProfile'>
-                    <picture>
-                        <img src={Avatar} alt={Avatar} className='cursor-pointer' />
+            <div className='h-screen w-[305px] rounded-2xl flex flex-col items-center justify-start bg-gradient-to-r from-cyan-500 to-blue-500'>
+                <div className='relative shadowProfile '>
+                    <picture className='flex item-center justify-center pt-8'>
+                        <img
+                            src={userList.usersProfile_picture ? userList.usersProfile_picture : Avatar}
+                            alt={Avatar}
+                            className='cursor-pointer rounded-full w-[100px] h-[100px] ' />
                     </picture>
-
+                    <h1 className='text-white text-center font-Poppins font-medium text-xl'>{auth.currentUser.displayName}</h1>
 
                     <span>
                         <UploadButton uploader={uploader}
                             options={options}
-                            onComplete={(files) => console.log(files.map((x) => x.fileUrl))}>
+                            onComplete={
+                                (files) =>
+                                    update(profileUpdateRef, {
+                                        usersProfile_picture
+                                            : files[0].fileUrl
+                                    }).then(() => {
+                                        SuccessToast("Profile Update done", "top-center")
+                                    }).catch((arr) => {
+                                        ErrorToast(`${err.code}`);
+                                    })
+
+                            }>
 
                             {({ onClick }) =>
                                 <button onClick={onClick}>
@@ -111,7 +155,7 @@ const HomeLeft = () => {
                         <img src={LogOutIcon} alt={LogOutIcon} className='mix-blend-multiply w-10 cursor-pointer' />
                     </picture>
                 </div>
-            </div>
+            </div >
         </>
 
     )

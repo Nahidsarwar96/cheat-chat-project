@@ -76,22 +76,25 @@
 
   .shadowProfile {
     position: relative;
+
   }
 
   .shadowProfile::after {
     position: absolute;
     content: "";
-    width: 105px;
-    height: 105px;
-    left: 35px;
-    top: 35px;
+    width: 100px;
+    height: 100px;
+    left: 18px;
+    top: 32px;
     background: black;
     opacity: 0;
     border-radius: 50%;
+
   }
 
   .shadowProfile:hover::after {
     background: black;
     opacity: 0.4;
+
   }
 }
