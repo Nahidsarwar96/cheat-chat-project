@@ -1,7 +1,5 @@
-import moment from 'moment';
+import moment from "moment";
 
-
-
-export const getTimeNow = (() => {
-    return moment().format("DD MM YYYY h:mm:ss a");
-})
+export const getTimeNow = () => {
+    return moment().format("MM DD YYYY  h:mm:ss a");
+}

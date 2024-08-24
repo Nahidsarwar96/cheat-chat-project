@@ -104,7 +104,7 @@ const RegistrationLeft = () => {
                     userName: fullName,
                     usersProfile_picture: "",
                     userEmail: auth.currentUser.email,
-                    createAt: getTimeNow(),
+                    createdAt: getTimeNow(),
                 }).then(() => {
                     console.log("write data on users collection");
                     navigate("/login");
