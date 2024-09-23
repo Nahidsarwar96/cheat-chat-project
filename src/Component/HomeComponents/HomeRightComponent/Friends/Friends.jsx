@@ -76,6 +76,7 @@ const Friends = () => {
     });
 
 
+
     return (
         <div className='p-2 w-[340px] h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl'>
 

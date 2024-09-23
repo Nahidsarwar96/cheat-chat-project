@@ -51,7 +51,31 @@ const BlockedUsers = () => {
 
     const handleUnblock = ((item) => {
 
+        const unblockObj = {
+
+            FriendRequestKey: item.FriendRequestKey,
+            createdAt: getTimeNow(),
+            whoReceivedFriendRequestEmail: item.blockByEmail,
+            whoReceivedFriendRequestName: item.blockByName,
+            whoReceivedFriendRequestProfilePicture: item.blockByProfile_picture,
+            whoReceivedFriendRequestUid: item.blockByUid,
+
+            whoSendFriendRequestEmail: item.blockedEmail,
+            whoSendFriendRequestName: item.blockedName,
+            whoSendFriendRequestUid: item.blockedUid,
+            whoSendFriendRequestProfilePicture: item.blockedProfile_picture ? item.blockedProfile_picture : ""
+
+
+        }
+
+        const friendsRef = ref(db, "Friends/")
+        set(push(friendsRef), unblockObj).then(() => {
+            remove(ref(db, "blockedUser/" + item.BlockKey))
+        })
+
+
     });
+
 
 
 
