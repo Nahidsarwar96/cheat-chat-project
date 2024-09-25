@@ -119,8 +119,7 @@ const Userlist = () => {
                         <div className='w-[60px] h-[60px] rounded-full shadow-lg'>
                             <picture>
                                 <img
-                                    src={`${user.usersProfile_picture ? user.usersProfile_picture : Group2}
-                                        `}
+                                    src={`${user.usersProfile_picture ? user.usersProfile_picture : Group2}`}
                                     alt="Missing"
                                     className='w-full h-full object-contain rounded-full' />
                             </picture>
@@ -128,7 +127,7 @@ const Userlist = () => {
                         <div class="flex flex-col items-start justify-center text-wrap w-[50%]  text-justify pl-2">
                             <h3 className='text-lg font-semibold font-poppins'>{`${user.userName ? user.userName : "xyz"}
                                     `}</h3>
-                            <p className='text-sm font-normal font-Poppins text-secondary_auth_color'>
+                            <p className='text-[12px] font-normal font-Poppins text-secondary_auth_color'>
                                 {moment(user.createdAt).calendar()}
                             </p>
                         </div>

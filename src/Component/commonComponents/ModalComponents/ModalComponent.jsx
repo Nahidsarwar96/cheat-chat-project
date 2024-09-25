@@ -15,7 +15,7 @@ const customStyles = {
 const ModalComponent = ({ openModal, closeModal, modalIsOpen, children }) => {
 
     return (
-        <div>
+        <div className=''>
 
             <Modal
                 isOpen={modalIsOpen}

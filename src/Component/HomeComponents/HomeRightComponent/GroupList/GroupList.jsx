@@ -6,15 +6,27 @@ const defaultSrc =
 
 import ModalComponent from '../../../commonComponents/ModalComponents/ModalComponent.jsx';
 import Group1 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group1.gif';
+import { ErrorToast } from "../../../../../Utils/Toast.js";
+import { SuccessToast } from "../../../../../Utils/Toast.js";
+import { getDatabase, ref, set, push } from "firebase/database";
+import { getAuth } from "firebase/auth";
 // import Group2 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group2.gif';
 // import Group3 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group3.gif';
 
 const GroupList = () => {
-
-
+    const db = getDatabase();
+    const auth = getAuth();
     const [modalIsOpen, setIsOpen] = React.useState(false);
     const [image, setImage] = useState(defaultSrc);
-    const [cropData, setCropData] = useState("#");
+    const [cropData, setCropData] = useState("");
+    const [loading, setloading] = useState(false);
+    const [groupInfo, setGroupInfo] = useState({
+        groupTagName: "",
+        groupName: "",
+
+    });
+
+
     const cropperRef = createRef();
 
     function openModal() {
@@ -24,6 +36,8 @@ const GroupList = () => {
     function closeModal() {
         setIsOpen(false);
     }
+
+    // Onchange image handler
 
     const onChange = (e) => {
         e.preventDefault();
@@ -45,6 +59,53 @@ const GroupList = () => {
             setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
         }
     };
+
+    // onchange for input Value
+    const groupHandleInput = (event) => {
+        const { id, value } = event.target;
+        setGroupInfo({
+            ...groupInfo,
+            [id]: value,
+        })
+
+    }
+
+    const handleCreateGroup = () => {
+        const { groupName, groupTagName } = groupInfo;
+        if (!groupName) {
+            ErrorToast("GroupName missing", "top-right")
+
+        } else if (!groupTagName) {
+            ErrorToast("GroupTagName missing", "top-right")
+        } else if (!cropData) {
+            ErrorToast("Crop Image missing", "top-right")
+        } else {
+            setloading(true)
+            set(push(ref(db, 'group/')), {
+                groupName,
+                groupTagName,
+                groupImage: cropData,
+                whoCreateGroupUid: auth.currentUser.uid,
+                whoCreateGroupName: auth.currentUser.displayName ? auth.currentUser.displayName : "Hello",
+                whoCreateGroupEmail: auth.currentUser.email,
+                whoCreateGroupProfile_picture: auth.currentUser.photoURL ? auth.currentUser.photoURL : "No Image"
+
+            }).then(() => {
+                SuccessToast("Please wait group is creating!!", "top-left")
+            }).catch((err) => {
+                ErrorToast(`Error form ${err.code}`, "top-left")
+
+            }).finally(() => {
+                setGroupInfo({
+                    groupTagName: "",
+                    groupName: "",
+
+                });
+                setloading(false)
+            })
+        }
+    }
+
     return (
         <div className='p-2 w-[340px] h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl'>
 
@@ -88,7 +149,7 @@ const GroupList = () => {
                 closeModal={closeModal}
                 modalIsOpen={modalIsOpen} >
 
-                <div className='w-[60vw] mt-10 overflow-y-scroll'>
+                <div className='w-[60vw] h-[70vh] overflow-y-scroll mt-10 overflow-y-scroll'>
 
                     <form action="#" method="post" onSubmit={(e) => e.preventDefault()}>
                         <div className='flex flex-col items-start gap-y-2'>
@@ -101,7 +162,8 @@ const GroupList = () => {
                                 type="text"
                                 name="groupName"
                                 id="groupName"
-                                value={""}
+                                value={groupInfo.groupName}
+                                onChange={groupHandleInput}
                                 placeholder='Enter Your Group Name'
                             />
 
@@ -116,7 +178,8 @@ const GroupList = () => {
                                 type="text"
                                 name="groupTagName"
                                 id="groupTagName"
-                                value={""}
+                                value={groupInfo.groupTagName}
+                                onChange={groupHandleInput}
                                 placeholder='Enter Your Group tagName'
                             />
 
@@ -131,7 +194,7 @@ const GroupList = () => {
 
                             </div>
 
-                            <div className="flex relative">
+                            <div className="flex relative justify-between">
 
                                 <div className="w-[34%] h-[220px]">
                                     <Cropper
@@ -176,7 +239,14 @@ const GroupList = () => {
 
 
                         </div>
+                        <div>
+                            {loading ? (<button className="w-full my-10 py-5 bg-blue-600 font-bold text-white text-2xl font-Poppins">
+                                Loading...
+                            </button>) : (<button className="w-full my-10 py-5 bg-blue-600 font-bold text-white text-2xl font-Poppins" onClick={handleCreateGroup}>
+                                Create Group
+                            </button>)}
 
+                        </div>
                     </form>
                 </div>
 
