@@ -1,5 +1,6 @@
 import React, { useState, createRef } from "react";
 import Cropper from "react-cropper";
+import { v4 as uuidv4 } from 'uuid';
 import "cropperjs/dist/cropper.css";
 const defaultSrc =
     "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
@@ -10,10 +11,12 @@ import { ErrorToast } from "../../../../../Utils/Toast.js";
 import { SuccessToast } from "../../../../../Utils/Toast.js";
 import { getDatabase, ref, set, push } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import { getStorage, ref as ourStorageRef, uploadString, getDownloadURL } from "firebase/storage";
 // import Group2 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group2.gif';
 // import Group3 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group3.gif';
 
 const GroupList = () => {
+    const storage = getStorage();
     const db = getDatabase();
     const auth = getAuth();
     const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -81,17 +84,25 @@ const GroupList = () => {
             ErrorToast("Crop Image missing", "top-right")
         } else {
             setloading(true)
-            set(push(ref(db, 'group/')), {
-                groupName,
-                groupTagName,
-                groupImage: cropData,
-                whoCreateGroupUid: auth.currentUser.uid,
-                whoCreateGroupName: auth.currentUser.displayName ? auth.currentUser.displayName : "Hello",
-                whoCreateGroupEmail: auth.currentUser.email,
-                whoCreateGroupProfile_picture: auth.currentUser.photoURL ? auth.currentUser.photoURL : "No Image"
+            const storageRef = ourStorageRef(storage, `groupImage ${uuidv4().split("-")[0]} `);
 
-            }).then(() => {
-                SuccessToast("Please wait group is creating!!", "top-left")
+            uploadString(storageRef, cropData, 'data_url').then((snapshot) => {
+                const { metadata } = snapshot;
+                return metadata?.fullPath;
+            }).then((imagePath) => {
+                return getDownloadURL(ourStorageRef(storage, imagePath));
+            }).then((DownloadURL) => {
+                set(push(ref(db, 'group/')), {
+                    groupName,
+                    groupTagName,
+                    groupImage: DownloadURL,
+                    whoCreateGroupUid: auth.currentUser.uid,
+                    whoCreateGroupName: auth.currentUser.displayName ? auth.currentUser.displayName : "Hello",
+                    whoCreateGroupEmail: auth.currentUser.email,
+                    whoCreateGroupProfile_picture: auth.currentUser.photoURL ? auth.currentUser.photoURL : "No Image"
+
+                })
+
             }).catch((err) => {
                 ErrorToast(`Error form ${err.code}`, "top-left")
 
@@ -101,7 +112,8 @@ const GroupList = () => {
                     groupName: "",
 
                 });
-                setloading(false)
+                setloading(false);
+                closeModal();
             })
         }
     }
@@ -149,7 +161,7 @@ const GroupList = () => {
                 closeModal={closeModal}
                 modalIsOpen={modalIsOpen} >
 
-                <div className='w-[60vw] h-[70vh] overflow-y-scroll mt-10 overflow-y-scroll'>
+                <div className='w-[60vw] h-[70vh] mt-10 overflow-y-scroll'>
 
                     <form action="#" method="post" onSubmit={(e) => e.preventDefault()}>
                         <div className='flex flex-col items-start gap-y-2'>
