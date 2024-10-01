@@ -11,6 +11,7 @@ import {
   Route
 } from "react-router-dom";
 import Home from './Pages/Home/Home.jsx';
+import Chat from "./Pages/Chat/Chat.jsx";
 import RootLayout from './Component/HomeComponents/RootLayout/RootLayout.jsx';
 
 
@@ -23,7 +24,7 @@ const App = () => {
         <Route path="/login" element={<Login />}></Route>
         <Route element={<RootLayout />}>
           <Route index="/" element={<Home />}></Route>
-          <Route path="/chat" element={"Chat"}></Route>
+          <Route path="/chat" element={<Chat />}></Route>
           <Route path="/notification" element={"Notification"}></Route>
           <Route path="/settings" element={"Settings"}></Route>
           <Route path="*" element={<Error />}></Route>
