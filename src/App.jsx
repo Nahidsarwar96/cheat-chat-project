@@ -13,6 +13,7 @@ import {
 import Home from './Pages/Home/Home.jsx';
 import Chat from "./Pages/Chat/Chat.jsx";
 import RootLayout from './Component/HomeComponents/RootLayout/RootLayout.jsx';
+import Notification from './Pages/Notification/Notification.jsx';
 
 
 const App = () => {
@@ -25,7 +26,7 @@ const App = () => {
         <Route element={<RootLayout />}>
           <Route index="/" element={<Home />}></Route>
           <Route path="/chat" element={<Chat />}></Route>
-          <Route path="/notification" element={"Notification"}></Route>
+          <Route path="/notification" element={<Notification />}></Route>
           <Route path="/settings" element={"Settings"}></Route>
           <Route path="*" element={<Error />}></Route>
         </Route>
