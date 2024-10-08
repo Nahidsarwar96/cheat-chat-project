@@ -16,7 +16,7 @@ import { getTimeNow } from "../../../../../Utils/Moment/Moment.js"
 // import Group2 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group2.gif';
 // import Group3 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAssets/group3.gif';
 
-const GroupList = () => {
+const GroupList = ({ isChatc = false }) => {
     const storage = getStorage();
     const db = getDatabase();
     const auth = getAuth();
@@ -181,7 +181,7 @@ const GroupList = () => {
 
 
     return (
-        <div className='p-2 w-[340px] h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl'>
+        <div className={isChatc ? 'p-2 w-full h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl' : 'p-2 w-[340px] h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl'}>
 
             <div className='flex items-center justify-between'>
                 <div className='font-Poppins text-lg font-semibold'>

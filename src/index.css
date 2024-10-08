@@ -97,4 +97,34 @@
     opacity: 0.4;
 
   }
+
+  .box_left,
+  .box_right {
+    position: relative;
+    z-index: 1;
+  }
+
+  .box_left::after {
+    @apply bg-blue-600;
+    position: absolute;
+    content: "";
+    left: -10px;
+    bottom: 0;
+    height: 30px;
+    width: 30px;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    z-index: -1;
+  }
+
+  .box_right::after {
+    @apply bg-blue-600;
+    position: absolute;
+    content: "";
+    right: -10px;
+    bottom: 0;
+    height: 30px;
+    width: 30px;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    z-index: -1;
+  }
 }

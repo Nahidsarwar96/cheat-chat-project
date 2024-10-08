@@ -8,7 +8,7 @@ import { getTimeNow } from '../../../../../Utils/Moment/Moment';
 
 
 
-const Friends = () => {
+const Friends = ({ isChatc = false }) => {
 
     const db = getDatabase();
     const auth = getAuth();
@@ -78,7 +78,7 @@ const Friends = () => {
 
 
     return (
-        <div className='p-2 w-[340px] h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl'>
+        <div className={isChatc ? 'p-2 w-full h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl' : 'p-2 w-[340px] h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl'}>
 
             <div className='flex items-center justify-between'>
                 <div className='font-Poppins text-lg font-semibold relative'>
