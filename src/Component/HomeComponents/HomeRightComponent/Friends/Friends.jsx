@@ -4,7 +4,10 @@ import Group1 from '../../../../assets/HomeAssets/HomeAssetsRight/GroupListAsset
 import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
 import { getAuth } from 'firebase/auth';
 import moment from 'moment';
+import { useSelector, useDispatch } from 'react-redux';
 import { getTimeNow } from '../../../../../Utils/Moment/Moment';
+import { friendsInfo } from '../../../../Features/Redux/AllSlice/Friendslice';
+
 
 
 
@@ -12,6 +15,7 @@ const Friends = ({ isChatc = false }) => {
 
     const db = getDatabase();
     const auth = getAuth();
+    const dispatch = useDispatch();
     const [FriendsList, setFriendsList] = useState([]);
 
 
@@ -75,7 +79,14 @@ const Friends = ({ isChatc = false }) => {
 
     });
 
+    /**
+     * handleFriend funtion implement
+     */
 
+    const handleFriend = (item = {}) => {
+        dispatch(friendsInfo(item))
+
+    }
 
     return (
         <div className={isChatc ? 'p-2 w-full h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl' : 'p-2 w-[340px] h-[250px] bg-stone-50 mt-5 rounded-xl shadow-xl'}>
@@ -97,7 +108,7 @@ const Friends = ({ isChatc = false }) => {
             <div className='flex flex-col gap-y-4  h-[85%] mt-2 overflow-y-scroll scrollbar-thumb-blue-600 scrollbar-track-transparent scrollbar-thin'>
                 {FriendsList.map((item, index) => (
 
-                    <div className='flex items-center justify-between border-b-[1px]  pb-2 border-b-gray-300'>
+                    <div className='flex items-center justify-between border-b-[1px]  pb-2 border-b-gray-300' onClick={() => handleFriend(item)}>
                         <div className='w-[60px] h-[60px] rounded-full shadow-lg'>
                             <picture>
                                 <img
